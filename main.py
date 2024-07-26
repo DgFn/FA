@@ -1,13 +1,18 @@
-from fastapi import FastAPI
+from database.engine import Session, engine
+from database.models import User, Base
+from repositories.users import get_users
 
-app = FastAPI()
+def main():
+    new_user = User(login='puska')
+
+    with Session() as session:
+        session.add(new_user)
+        session.commit()
+
+        users = get_users(session)
+
+        print(users)
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+if __name__ == '__main__':
+    main()
